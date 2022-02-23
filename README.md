@@ -316,7 +316,7 @@ Select from the person table. Select the last name and first name of all people 
 
 <details><summary>Hint</summary><p>
 
-the *upper* function can be used to uppercase values. e.g. UPPER(column_name)
+the `upper` function can be used to uppercase values. e.g. UPPER(column_name)
 *order by* clause can be used to order results
 
 </p></details>
