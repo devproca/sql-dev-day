@@ -6,13 +6,13 @@ For this dev day, we're going to be using a local postgres instance running on d
 To start the local postgres instance, run 
 
 ```
- docker run -p 5432:5432 -e POSTGRES_PASSWORD=secret -d postgres
+docker run -p 5432:5432 -e POSTGRES_PASSWORD=secret -d postgres
 ```
 
 In DataGrip, add a connection with the following JDBC url. The username will be **postgres** and the password will be **secret**.
 
 ```
-  jdbc:postgresql://localhost:5432/postgres
+jdbc:postgresql://localhost:5432/postgres
 ```
 
 
@@ -29,7 +29,7 @@ This is the *Physical ERD* [see entity-relationship model](https://en.wikipedia.
 Create the person food type enum. This type will be used in your person_food table.
  
 ```
-  create type person_food_type as enum ('LOVES', 'HATES', 'ALLERGIC');
+create type person_food_type as enum ('LOVES', 'HATES', 'ALLERGIC');
 ```
 
 ### Exercise 1b 
@@ -39,10 +39,10 @@ Create the **food** table according to ER Diagram. **DO NOT** include a primary 
 <details><summary>Answer</summary><p>
 
 ```
-    create table food (
-        food_id integer,
-        name varchar(50) not null
-    );
+create table food (
+    food_id integer,
+    name varchar(50) not null
+);
 ```
 </p></details>
 
@@ -83,7 +83,7 @@ select * from information_schema.tables where table_schema = 'public';
 To view all *columns* in the food table, execute the following: 
 
 ```
-  select * from information_schema.columns where table_name = 'food';
+select * from information_schema.columns where table_name = 'food';
 ```
 
 
@@ -92,18 +92,18 @@ To view all *table constraints* on the food table, execute the following:
 If you made the food.name column *not null*, you should see a check constraint. 
 
 ```
-    select * from information_schema.table_constraints where table_name = 'food';
+select * from information_schema.table_constraints where table_name = 'food';
 ```
 
 Add a primary key to the food table:
 
 ```
-    alter table food add constraint food_pk primary key (food_id);
+alter table food add constraint food_pk primary key (food_id);
 ```
 
 Let's look at the table constraints again (note the addition of the primary key constraint)
 ```
-    select * from information_schema.table_constraints where table_name = 'food';
+select * from information_schema.table_constraints where table_name = 'food';
 ```
 
 When you add a primary key, it will also create a *unique index*. Indexes are important for database performance. To view the index, execute the following:
@@ -295,16 +295,15 @@ Select from the person table. Select the last name and first name of all people 
 
 <details><summary>Hint</summary><p>
 
-```
-    || can be used to concatenate values 
-```
+|| can be used to concatenate values 
+
 </p></details>
 
 
 <details><summary>Answer</summary><p>
 
 ```
-    select p.last_name || ', ' || p.first_name as name from person p;
+select p.last_name || ', ' || p.first_name as name from person p;
 ```
 </p></details>
 
@@ -317,10 +316,9 @@ Select from the person table. Select the last name and first name of all people 
 
 <details><summary>Hint</summary><p>
 
-```
-    the *UPPER* function can be used to uppercase values. e.g. UPPER(column_name)
-    *ORDER BY* can be used to order results
-```
+the *upper* function can be used to uppercase values. e.g. UPPER(column_name)
+*order by* clause can be used to order results
+
 </p></details>
 
 **expected output**
@@ -337,9 +335,9 @@ Select from the person table. Select the last name and first name of all people 
 <details><summary>Answer</summary><p>
 
 ```
-    select UPPER(p.first_name) || ' ' || UPPER(p.last_name) as name
-      from person p
-      order by last_name, first_name;
+select UPPER(p.first_name) || ' ' || UPPER(p.last_name) as name
+  from person p
+  order by last_name, first_name;
 ```
 </p></details>
 
@@ -350,14 +348,14 @@ select all person records with a last name starting with the letter R
 <details><summary>Hint</summary><p>
 
 ```
-    use LIKE
+use LIKE
 ```
 </p></details>
 
 <details><summary>Answer</summary><p>
 
 ```
-    select * from person where last_name like 'R%'
+select * from person where last_name like 'R%'
 ```
 </p></details>
 
@@ -369,14 +367,14 @@ select all person records with a last name starting with the letter R follows by
 <details><summary>Hint</summary><p>
 
 ```
-   % is analagous to *, _ is is analagous to . 
+% is analagous to *, _ is is analagous to . 
 ```
 </p></details>
 
 <details><summary>Answer</summary><p>
 
 ```
-    select * from person where last_name like 'R_____s'
+select * from person where last_name like 'R_____s'
 ```
 </p></details>
 
@@ -387,12 +385,11 @@ select all person records with a last name of Smith or Hope
 <details><summary>Answer</summary><p>
 
 ```
-    select * from person where last_name in ('Smith', 'Hope');
-    
-    -- or --
-    
-    select * from person where last_name = 'Smith' or last_name = 'Hope';
+select * from person where last_name in ('Smith', 'Hope');
 
+-- or --
+
+select * from person where last_name = 'Smith' or last_name = 'Hope';
 ```
 </p></details>
 
@@ -410,7 +407,7 @@ count the number of records in the person table
 <details><summary>Answer</summary><p>
 
 ```
-    select count(*) from person p;
+select count(*) from person p;
 ```
 </p></details>
 
@@ -431,18 +428,18 @@ count the number of people with the same last name. If you look at the inserts, 
 <details><summary>Hint</summary><p>
 
 ```
-    use GROUP BY to group the results
+use GROUP BY to group the results
 ```
 </p></details>
 
 <details><summary>Answer</summary><p>
 
 ```
-    select count(*), last_name
-      from person p
-      group by last_name;
-      
-    Note: more generally, group by is used to collapse rows. 
+select count(*), last_name
+  from person p
+  group by last_name;
+  
+Note: more generally, group by is used to collapse rows. 
 ```
 </p></details>
 
@@ -642,12 +639,12 @@ Note: Common table expressions are included in the ANSI SQL1999 standard
 Example:
 
 ```
-    with fancy_temp_results as (
-        select 'hello' column_alias UNION
-        select 'world' UNION
-        select 'goodnight' UNION
-        select 'moon')
-    select * from fancy_temp_results t;
+with fancy_temp_results as (
+    select 'hello' column_alias UNION
+    select 'world' UNION
+    select 'goodnight' UNION
+    select 'moon')
+select * from fancy_temp_results t;
 ```
 
 Include the results of Exercise 3d in a CTE (name your result set **preferences**). Use your CTE to develop a query that has the following output:
@@ -717,10 +714,10 @@ Here is a simple example:
 
 ```
 select person_id,
-       first_name,
-       last_name,
-       count(*) over (partition by last_name) has_same_last
-       from person;
+   first_name,
+   last_name,
+   count(*) over (partition by last_name) has_same_last
+   from person;
 ```
 
 will give the following results:
