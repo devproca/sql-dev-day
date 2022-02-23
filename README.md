@@ -189,9 +189,8 @@ Because we have a foreign key constraint on person_food.food_id to ensure that p
 
 <details><summary>Answer</summary><p>
 
-```
 The database engine will have to ensure that no rows exist in the person_food table that have a food_id of 1 before successfully deleting the row from the food table. If the food_id in the person_food table was NOT indexed, the database engine would have to perform a *full table scan* (rather than an index scan if the column was indexed) of the person_food table to ensure this is valid. This is one reason why it's important to index foreign keys.
-```
+
 </p></details>
 
 So let's create those indexes on the two foreign key columns in the person_food table.
@@ -295,7 +294,7 @@ Select from the person table. Select the last name and first name of all people 
 
 <details><summary>Hint</summary><p>
 
-|| can be used to concatenate values 
+`||` can be used to concatenate values 
 
 </p></details>
 
@@ -317,7 +316,7 @@ Select from the person table. Select the last name and first name of all people 
 <details><summary>Hint</summary><p>
 
 the `upper` function can be used to uppercase values. e.g. UPPER(column_name)
-*order by* clause can be used to order results
+the `order by` clause can be used to order results
 
 </p></details>
 
@@ -347,15 +346,14 @@ select all person records with a last name starting with the letter R
 
 <details><summary>Hint</summary><p>
 
-```
-use LIKE
-```
+use `like`
+
 </p></details>
 
 <details><summary>Answer</summary><p>
 
 ```
-select * from person where last_name like 'R%'
+select * from person where last_name like 'R%';
 ```
 </p></details>
 
@@ -366,15 +364,15 @@ select all person records with a last name starting with the letter R follows by
 
 <details><summary>Hint</summary><p>
 
-```
-% is analagous to *, _ is is analagous to . 
-```
+`%` is analogous to *
+`_` is analogous to . 
+
 </p></details>
 
 <details><summary>Answer</summary><p>
 
 ```
-select * from person where last_name like 'R_____s'
+select * from person where last_name like 'R_____s';
 ```
 </p></details>
 
@@ -386,9 +384,9 @@ select all person records with a last name of Smith or Hope
 
 ```
 select * from person where last_name in ('Smith', 'Hope');
-
+```
 -- or --
-
+```
 select * from person where last_name = 'Smith' or last_name = 'Hope';
 ```
 </p></details>
@@ -480,7 +478,7 @@ select * from person p
   join person_food pf on pf.person_id = p.person_id;
 ```
 
-will *join* the table data and give the following results:
+will `join` the table data and give the following results:
               
 | p.person_id | first_name | person_food_id | pf.person_id  | person_food_type | food_id     |    
 | ------------|------------| ---------------|---------------|------------------|-------------|    
@@ -492,7 +490,7 @@ If this makes sense to you, carry on! If this doesn't make sense to you, ask a n
 [Inner Joins](https://en.wikipedia.org/wiki/Join_(SQL)#Inner_join)
 ![Inner Joins](./InnerJoin.png)   
 
-Notice that 'Wanda' is not present in the result set because there are no records for person_id == 2 in the person_food table. Sometimes, you'll want to include those records however. You would do that with a left join.
+Notice that 'Wanda' is not present in the result set because there are no records for person_id == 2 in the person_food table. Sometimes, you'll want to include those records however. You would do that with a `left join`.
 
 ```      
 select * from person p
@@ -515,7 +513,7 @@ If this makes sense to you, carry on! If this doesn't make sense to you, ask a n
 
 ### Exercise 3a
 
-Develop a query to display each of the foods, and how many people **LOVES** that food. You'll want to start with the food table, and *join* to the food_preference table.
+Develop a query to display each of the foods, and how many people **LOVES** that food. You'll want to start with the food table, and `join` to the food_preference table.
 
 **expected output**
 
@@ -596,7 +594,7 @@ select f.name, count(*) count, 'HATES' preference from food f
 
 ### Exercise 3d
 
-Develop a query to display each of the foods, and how many people **LOVES** that food, and how many people **HATES** that food (as separate rows). You've already developed the queries, now you just have to combine them (use union).
+Develop a query to display each of the foods, and how many people **LOVES** that food, and how many people **HATES** that food (as separate rows). You've already developed the queries, now you just have to combine them (hint `union`).
 
 **expected output**
 
@@ -621,7 +619,7 @@ Develop a query to display each of the foods, and how many people **LOVES** that
 select f.name, count(person_food_type) count, 'LOVES' preference from food f
   left join person_food pf on pf.food_id = f.food_id and person_food_type = 'LOVES'
   group by f.name
-UNION
+union
 select f.name, count(person_food_type), 'HATES' from food f
   left join person_food pf on pf.food_id = f.food_id and person_food_type = 'HATES'
   group by f.name
@@ -632,7 +630,7 @@ order by preference, count, name;
 
 ### Exercise 4 - Common table expressions
 
-When developing sql queries and reports, sometimes you want to make intermediate result sets to simplify your query. A common table expressions is a temporary named result set, derived from a simple query (with clause).
+When developing sql queries and reports, sometimes you want to make intermediate result sets to simplify your query. A common table expressions is a temporary named result set, derived from a simple query (`with` clause).
 
 Note: Common table expressions are included in the ANSI SQL1999 standard
 
@@ -663,9 +661,9 @@ Include the results of Exercise 3d in a CTE (name your result set **preferences*
 
 <details><summary>Hint</summary><p>
 
-```
-if you're having trouble getting started, start here:
+If you're having trouble getting started, start here:
 
+```
 with preferences as (SELECT * from (
          select f.name, count(person_food_type) count, 'LOVES' preference
          from food f
@@ -678,7 +676,6 @@ with preferences as (SELECT * from (
          group by f.name
      ) t)
 select * from preferences;
-
 ```
 </p></details>
 
@@ -691,7 +688,7 @@ with preferences as (SELECT * from (
          from food f
          left join person_food pf on pf.food_id = f.food_id and person_food_type = 'LOVES'
          group by f.name
-         UNION
+         union
          select f.name, count(person_food_type), 'HATES' preference
          from food f
          left join person_food pf on pf.food_id = f.food_id and person_food_type = 'HATES'
