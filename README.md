@@ -1,4 +1,6 @@
-# SQL Dev Day
+
+![SQL dev day](./Hero.png)
+
 
 For this dev day, we're going to be using a local postgres instance running on docker, and the database IDE of your choice (preferably DataGrip).
 
