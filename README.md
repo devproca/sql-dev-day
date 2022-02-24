@@ -456,7 +456,7 @@ select count(*), last_name
 
 ## Exercise 3 - Joins
 
-[Joins](https://en.wikipedia.org/wiki/Join_(SQL)) are a way of linking result sets. Pretend we have the following data:
+[Joins](https://en.wikipedia.org/wiki/Join_(SQL)) are a way of linking result sets. Let's imagine we have the following data:
 
 **table:** person
 
@@ -504,10 +504,11 @@ will *left join* the table data and give the following results:
 | 1           | Fred       | 2              | 1             |  HATES           |  2          | 
 | 2           | Wanda      | null           | null          |  null            |  null       | 
 
+If this makes sense to you, carry on! If this doesn't make sense to you, ask a neighbour for help!
+
 [Left Joins](https://en.wikipedia.org/wiki/Join_(SQL)#Left_outer_join)
 ![Left Joins](./LeftJoin.png)
 
-If this makes sense to you, carry on! If this doesn't make sense to you, ask a neighbour for help!
 
 
 ### Exercise 3a
@@ -531,10 +532,10 @@ Develop a query to display each of the foods, and how many people **LOVES** that
 ```
 select f.name, count(*) count, 'LOVES' preference from food f
   join person_food pf on pf.food_id = f.food_id and person_food_type = 'LOVES'
-  group by f.name;
-  
-Note: this join syntax is part of the ANSI SQL1992 standard
+  group by f.name;  
 ```
+
+Note: this join syntax is part of the ANSI SQL1992 standard
 </p></details>
 
 ### Exercise 3b
@@ -567,7 +568,6 @@ Note there are only 5 hated foods rather that 6. You aren't getting back a row f
 ### Exercise 3c
 
 Modify your query so Apples is displayed with a count of 0. (change your join type)
-
 
 **expected output**
 
