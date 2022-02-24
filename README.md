@@ -28,7 +28,7 @@ This model allows us to add rows to the food table, and track which people LOVE,
 
 ### Excercise 1a 
 
-Create the person food type enum. This type will be used in your person_food table.
+Create the person food type enum. This type will be used in your **person_food** table.
  
 ```
 create type person_food_type as enum ('LOVES', 'HATES', 'ALLERGIC');
@@ -74,9 +74,7 @@ create table person_food (
 
 ### Exercise 1d 
 
-Examine your table metadata using the INFORMATION_SCHEMA.
-
-These tables were created in the **public** schema. To view all tables in the public schema, execute the following: 
+In this exercise we will examine the table metadata using the *information_schema*. The tables were created in the **public** schema. To view all tables in the public schema, execute the following: 
 
 ```
 select * from information_schema.tables where table_schema = 'public';
@@ -87,7 +85,6 @@ To view all *columns* in the food table, execute the following:
 ```
 select * from information_schema.columns where table_name = 'food';
 ```
-
 
 To view all *table constraints* on the food table, execute the following:
 
@@ -722,7 +719,7 @@ select loves.name, loves.count "# loves", hates.count "# hates"
 
 ## Exercise 5 - Window functions
 
-[Window functions](https://en.wikipedia.org/wiki/Window_function_(SQL) (or analytic functions as Oracle calls them) are part of the ANSI SQL2003 standard. Window functions allow us to perform aggregate operations on a subset of the date (averages, counts, sums etc). Window functions **do not collapse rows** like a group by. They are most useful when you want to include totals at a row level in a report.
+[Window functions](https://en.wikipedia.org/wiki/Window_function_(SQL)) (or analytic functions as Oracle calls them) are part of the ANSI SQL2003 standard. Window functions allow us to perform aggregate operations on a subset of the date (averages, counts, sums etc). Window functions **do not collapse rows** like a group by. They are most useful when you want to include totals at a row level in a report.
 
 Here is a simple example:
 
