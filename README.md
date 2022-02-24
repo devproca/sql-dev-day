@@ -310,10 +310,7 @@ select p.last_name || ', ' || p.first_name as name from person p;
 
 ### Exercise 2b 
 
-Select from the person table. Select the last name and first name of all people as a single string delimited by a comma.
-
- - First name and last name should be uppercase.  
- - Results should be ordered by last name, then by first name
+Select from the person table. Select the first name, followed by a space, followed by the last name. Both first and last name should be uppercase. Results should be ordered by last name, then by first name.
 
 <details><summary>Hint</summary><p>
 
@@ -336,7 +333,7 @@ the `order by` clause can be used to order results
 <details><summary>Answer</summary><p>
 
 ```
-select UPPER(p.first_name) || ' ' || UPPER(p.last_name) as name
+select upper(p.first_name) || ' ' || upper(p.last_name) as name
   from person p
   order by last_name, first_name;
 ```
