@@ -18,7 +18,7 @@ jdbc:postgresql://localhost:5432/postgres
 ```
 
 
-## Exercise 1 - Creating tables
+## Exercise 1 - Tables, Constraints, and Indexes
 
 This is the *Physical ERD* (see [entity-relationship model](https://en.wikipedia.org/wiki/Entity%E2%80%93relationship_model)) that we will be working with.
 
@@ -342,7 +342,7 @@ select UPPER(p.first_name) || ' ' || UPPER(p.last_name) as name
 ```
 </p></details>
 
-### Exercise 2e
+### Exercise 2c
 
 select all person records with a last name starting with the letter R
 
@@ -360,7 +360,7 @@ select * from person where last_name like 'R%';
 </p></details>
 
 
-### Exercise 2e
+### Exercise 2d
 
 select all person records with a last name starting with the letter R follows by any 5 characters, and ending in s 
 
@@ -393,7 +393,7 @@ select * from person where last_name = 'Smith' or last_name = 'Hope';
 ```
 </p></details>
 
-### Exercise 2c
+### Exercise 2f
 
 count the number of records in the person table
 
@@ -411,7 +411,7 @@ select count(*) from person p;
 ```
 </p></details>
 
-### Exercise 2d
+### Exercise 2g
 
 count the number of people with the same last name. If you look at the inserts, 2 people have the last name 'Smith'.
 
@@ -605,7 +605,7 @@ Modify your query so Apples is displayed with a count of 0. (change your join ty
 <details><summary>Answer</summary><p>
 
 ```
-select f.name, count(*) count, 'HATES' preference from food f
+select f.name, count(person_food_type) count, 'HATES' preference from food f
   left join person_food pf on pf.food_id = f.food_id and person_food_type = 'HATES'
   group by f.name;
  
@@ -899,11 +899,11 @@ select
   f.name
   from food f
   cross join person p
-  left join person_food pf on pf.food_id = f.food_id and pf.person_id = p.person_id;
-  
-  
-  Note: coalesce is an ANSI SQL1992 function to return the first non-null value
+  left join person_food pf on pf.food_id = f.food_id and pf.person_id = p.person_id;  
 ```
+
+Note: coalesce is an ANSI SQL1992 function to return the first non-null value
+
 </p></details>
 
 ### Exercise 5c
