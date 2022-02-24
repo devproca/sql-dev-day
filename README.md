@@ -2,7 +2,7 @@
 ![SQL dev day](./Hero.png)
 
 
-For this dev day, we're going to be using a local postgres instance running on docker, and the database IDE of your choice (preferably DataGrip).
+For this dev day, we're going to be using a local postgres instance running on [docker](https://www.docker.com/products/docker-desktop), and the database IDE of your choice (preferably [DataGrip](https://www.jetbrains.com/datagrip/)).
 
 
 To start the local postgres instance, run 
