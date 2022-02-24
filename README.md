@@ -2,7 +2,7 @@
 ![SQL dev day](./Hero.png)
 
 
-For this dev day, we're going to be using a local postgres instance running on [docker](https://www.docker.com/products/docker-desktop), and the database IDE of your choice (preferably [DataGrip](https://www.jetbrains.com/datagrip/)).
+For this dev day, we're going to be using a local postgres instance running on [docker](https://www.docker.com/products/docker-desktop), and the database IDE of your choice (but preferably [DataGrip](https://www.jetbrains.com/datagrip/)).
 
 
 To start the local postgres instance, run 
@@ -115,7 +115,10 @@ select * from pg_indexes where tablename = 'food';
 
 Although we don't have any data in our database, and our primary keys, foreign keys, and indexes aren't fully created, we're going to see how the database engine might process our queries.
 
-In DataGrip, write the following, right click on each statement and choose 'Explain Plan'
+In DataGrip: 
+ - write the following selects
+ - right click on each statement
+ - choose 'Explain Plan'
 
 ```
 select * from food where food_id = 1;
@@ -131,7 +134,7 @@ explain select * from person where person_id = 1;
 
 Note that the database engine will use an *index scan* on the food query, using the unique index on the food_id column. Because the person table **does not** have any indexes, a *sequential scan* or *full table scan* is required to execute the person query. In a table with only a few rows, you won't notice a performance impact of a full table scan; however, you would notice an impact if the person table had 20 million rows. Throughout this dev day, feel free to run explain plans on your queries to assess the performance of your queries. 
 
-## Exercise 1f 
+### Exercise 1f 
 
 Create primary keys on the person and person_food tables
 
@@ -144,7 +147,7 @@ alter table person_food add constraint person_food_pk primary key (person_food_i
 </p></details>
 
 
-## Exercise 1g
+### Exercise 1g
 
 Create foreign key constraints AND indexes.
 
@@ -156,8 +159,8 @@ To view all *referential constraints* in the public schema, execute the followin
 select * from information_schema.referential_constraints where constraint_schema = 'public';
 ```
 
-Add a foreign key to person_food.person_id to reference person.person_id.
-Add a foreign key to person_food.food_id to reference food.food_id.
+- Add a foreign key to person_food.person_id to reference person.person_id.
+- Add a foreign key to person_food.food_id to reference food.food_id.
 
 <details><summary>Answer</summary><p>
 
@@ -178,13 +181,13 @@ Let's pretend we have some data in the database:
 | 1           | Strawberries|
 | 2           | Grapes      |
 
-We executed the following sql:
+We execute the following sql:
 
 ```
 delete from food where food_id = 1;
 ```
 
-Because we have a foreign key constraint on person_food.food_id to ensure that people don't LOVE or HATE foods that don't actually exist, what will the database engine have to do before successfully deleting strawberries?
+We have a foreign key constraint on person_food.food_id to ensure that people don't LOVE or HATE foods that don't actually exist. What will the database engine have to do before successfully deleting strawberries?
 
 <details><summary>Answer</summary><p>
 
@@ -199,7 +202,7 @@ create index person_food_ix1 on person_food(person_id);
 create index person_food_ix2 on person_food(food_id);
 ```
 
-## Summary
+### Summary
 
 In this exercise we
 
@@ -276,7 +279,7 @@ insert into person_food values (32, 6, 5, 'ALLERGIC');
 insert into person_food values (33, 6, 6, 'ALLERGIC');
 ```
 
-## Exercise 2a 
+### Exercise 2a 
 
 Select from the person table. Select the last name and first name of all people as a single string delimited by a comma.
 
@@ -305,12 +308,12 @@ select p.last_name || ', ' || p.first_name as name from person p;
 ```
 </p></details>
 
-## Exercise 2b 
+### Exercise 2b 
 
 Select from the person table. Select the last name and first name of all people as a single string delimited by a comma.
 
  - First name and last name should be uppercase.  
- - results should be ordered by last name, then by first name
+ - Results should be ordered by last name, then by first name
 
 <details><summary>Hint</summary><p>
 
@@ -339,7 +342,7 @@ select UPPER(p.first_name) || ' ' || UPPER(p.last_name) as name
 ```
 </p></details>
 
-## Exercise 2e
+### Exercise 2e
 
 select all person records with a last name starting with the letter R
 
@@ -357,7 +360,7 @@ select * from person where last_name like 'R%';
 </p></details>
 
 
-## Exercise 2e
+### Exercise 2e
 
 select all person records with a last name starting with the letter R follows by any 5 characters, and ending in s 
 
@@ -375,7 +378,7 @@ select * from person where last_name like 'R_____s';
 ```
 </p></details>
 
-## Exercise 2e
+### Exercise 2e
 
 select all person records with a last name of Smith or Hope
 
@@ -390,7 +393,7 @@ select * from person where last_name = 'Smith' or last_name = 'Hope';
 ```
 </p></details>
 
-## Exercise 2c
+### Exercise 2c
 
 count the number of records in the person table
 
@@ -408,7 +411,7 @@ select count(*) from person p;
 ```
 </p></details>
 
-## Exercise 2d
+### Exercise 2d
 
 count the number of people with the same last name. If you look at the inserts, 2 people have the last name 'Smith'.
 
@@ -453,6 +456,15 @@ select count(*), last_name
   having count(*) > 1;
 ```
 </p></details>
+
+### Summary
+
+In this exercise we
+
+- used sql functions to transform data (`upper`)
+- used wildcard queries (`like`)
+- ordered result sets (`order by`)
+- aggregated and collapsed result sets (`count` and `group by`)
 
 ## Exercise 3 - Joins
 
@@ -508,6 +520,15 @@ If this makes sense to you, carry on! If this doesn't make sense to you, ask a n
 
 [Left Joins](https://en.wikipedia.org/wiki/Join_(SQL)#Left_outer_join)
 ![Left Joins](./LeftJoin.png)
+
+
+In our example, what records occupy the right area of the venn diagram?
+
+<details><summary>Answer</summary><p>
+
+ A row in the person_food table without a corresponding food entry would occupy the *right*. In this data structure, that isn't possible. (you can't have a food preference without a food)
+
+</p></details>
 
 
 
@@ -627,6 +648,15 @@ order by preference, count, name;
 </p></details>
 
 
+### Summary
+
+In this exercise we
+
+- joined result sets using `inner join` or simply `join`
+- joined result sets using `left outer join` or simply `left join`
+- combined query result sets using `union`
+
+
 ### Exercise 4 - Common table expressions
 
 [Common table expressions](https://en.wikipedia.org/wiki/Hierarchical_and_recursive_queries_in_SQL#Common_table_expression) are included in the ANSI SQL1999 standard. When developing sql queries and reports, you often want to make intermediate result sets to simplify your query. A common table expressions is a temporary named result set, derived from a simple query, using a `with` clause.
@@ -717,6 +747,13 @@ select loves.name, loves.count "# loves", hates.count "# hates"
 </p></details>
 
 
+### Summary
+
+In this exercise we
+
+- used common table expressions to simplify our query
+
+
 ## Exercise 5 - Window functions
 
 [Window functions](https://en.wikipedia.org/wiki/Window_function_(SQL)) (or analytic functions as Oracle calls them) are part of the ANSI SQL2003 standard. Window functions allow us to perform aggregate operations on a subset of the date (averages, counts, sums etc). Window functions **do not collapse rows** like a group by. They are most useful when you want to include totals at a row level in a report.
@@ -731,7 +768,7 @@ select person_id,
    from person;
 ```
 
-will give the following results:
+that will give the following results:
 
 |person_id  | first_name            | last_name   | has_same_last  |
 |-----------|-----------------------|-------------|----------------|
@@ -742,7 +779,62 @@ will give the following results:
 |1          |Eats everything Joe    | Smith       | 2              |
 |2          |Eats everything Jane   | Smith       | 2              |
 
-       
+
+### Exercise 5a
+
+Add a **price** column to the food table populate the following prices 
+    
+| food_id   | name    | price     |
+| --------- | ------- | --------- |
+| 1         | Apples  |  3.5      |
+| 2         | Bananas |  1.25     |
+| 3         | Cherries|  6.5      |
+| 4         | Durian  |  7        |
+| 5         | Peanuts |  9        |
+| 6         | Kiwi    |  5.25     |
+
+
+<details><summary>Answer</summary><p>
+
+```
+alter table food add price decimal;
+
+update food set price = 3.5 where food_id = 1;
+update food set price = 1.25 where food_id = 2;
+update food set price = 6.5 where food_id = 3;
+update food set price = 7 where food_id = 4;
+update food set price = 9 where food_id = 5;
+update food set price = 5.25 where food_id = 6;
+```
+</p></details>
+
+
+Now create a query that gives the following results:
+
+| food_id  | name          |price   | avg_food_price  | total_price  |
+| -------- |-------------- |--------|-----------------|--------------|
+| 1        | Apples        |3.5     | 5.42            | 32.5         |
+| 2        | Bananas       |1.25    | 5.42            | 32.5         |
+| 3        | Cherries      |6.5     | 5.42            | 32.5         |
+| 4        | Durian        |7       | 5.42            | 32.5         |
+| 5        | Peanuts       |9       | 5.42            | 32.5         |
+| 6        | Kiwi          |5.25    | 5.42            | 32.5         |
+
+
+<details><summary>Answer</summary><p>
+
+```
+select food_id,
+   name,
+   price,
+   round(avg(price) over (), 2) avg_food_price,
+   round(sum(price) over (), 2) total_price
+   from food;
+```
+</p></details>
+
+### Exercise 5b
+
 In exercise 5 we will try to produce the following dataset:
                                                     
 the first row means:
@@ -791,8 +883,6 @@ the first row means:
 |Picky Maurice             |HATES     |Peanuts  |2                      | 2                       | 18            | 12          |
 |Picky Richard             |UNKNOWN   |Peanuts  |2                      | 2                       | 18            | 12          |
 |Allergic Garth            |ALLERGIC  |Peanuts  |2                      | 2                       | 18            | 12          |
-  
-### Exercise 5a
 
 Let's start with just the first 3 columns. 
 
@@ -816,7 +906,7 @@ select
 ```
 </p></details>
 
-### Exercise 5b
+### Exercise 5c
 
 Add window functions to add the columns
 
