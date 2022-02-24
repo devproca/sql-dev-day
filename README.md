@@ -1,6 +1,6 @@
 # SQL Dev Day
 
-For this dev day, we're going to be using a local postgres instance running on docker, and the database IDE of your choice (preferrably DataGrip).
+For this dev day, we're going to be using a local postgres instance running on docker, and the database IDE of your choice (preferably DataGrip).
 
 
 To start the local postgres instance, run 
@@ -9,7 +9,7 @@ To start the local postgres instance, run
 docker run -p 5432:5432 -e POSTGRES_PASSWORD=secret -d postgres
 ```
 
-In DataGrip, add a connection with the following JDBC url. The username will be **postgres** and the password will be **secret**.
+In DataGrip, add a connection with the following JDBC url. The username will be **postgres**, and the password will be **secret**.
 
 ```
 jdbc:postgresql://localhost:5432/postgres
@@ -18,11 +18,11 @@ jdbc:postgresql://localhost:5432/postgres
 
 ## Exercise 1 - Creating tables
 
-This is the *Physical ERD* [see entity-relationship model](https://en.wikipedia.org/wiki/Entity%E2%80%93relationship_model) that we will be working with.
+This is the *Physical ERD* (see [entity-relationship model](https://en.wikipedia.org/wiki/Entity%E2%80%93relationship_model)) that we will be working with.
 
-**This model allows us to add rows to the food table, and track which people LOVE, HATE, or are ALLERGIC to certain foods.**
+This model allows us to add rows to the food table, and track which people LOVE, HATE, or are ALLERGIC to certain foods.
 
-![blah blah](./PhysicalERD.png)
+![PhysicalERD](./PhysicalERD.png)
 
 ### Excercise 1a 
 
@@ -34,7 +34,7 @@ create type person_food_type as enum ('LOVES', 'HATES', 'ALLERGIC');
 
 ### Exercise 1b 
 
-Create the **food** table according to ER Diagram. **DO NOT** include a primary key declaration in your table create statement. Use all lowercase characters for your table name and column names. 
+Create the **food** table according to ER Diagram. **Do not** include a primary key declaration in your table create statement. Use all lowercase characters for your table name and column names. 
 
 <details><summary>Answer</summary><p>
 
@@ -49,7 +49,7 @@ create table food (
 
 ### Exercise 1c 
 
-Create the **person** and **person_food** tables. **DO NOT** include primary key or foreign key declarations in your create statements. 
+Create the **person** and **person_food** tables. **Do not** include primary key or foreign key declarations in your create statements. 
 
 <details><summary>Answer</summary><p>
 
@@ -130,7 +130,7 @@ explain select * from food where food_id = 1;
 explain select * from person where person_id = 1;
 ```
 
-Note that the database engine will use an *index scan* on the food query, using the unique index on the food_id column. Because the person table does NOT have any indexes, a *sequential scan* or *full table scan* is required to execute the person query. In a table with only a few rows, you won't notice a performance impact of a full table scan; however, you would notice an impact if the person table had 20 million rows. Throughout this dev day, feel free to run explain plans on your queries to assess the performance of your queries. 
+Note that the database engine will use an *index scan* on the food query, using the unique index on the food_id column. Because the person table **does not** have any indexes, a *sequential scan* or *full table scan* is required to execute the person query. In a table with only a few rows, you won't notice a performance impact of a full table scan; however, you would notice an impact if the person table had 20 million rows. Throughout this dev day, feel free to run explain plans on your queries to assess the performance of your queries. 
 
 ## Exercise 1f 
 
@@ -168,7 +168,7 @@ alter table person_food add constraint person_food_fk2 foreign key(food_id) refe
 ```
 </p></details>
 
-Note that creating primary keys automatically created indexes. Creating foreign key constraints DOES NOT automatically create indexes. 
+Note that creating primary keys automatically created indexes. Creating foreign key constraints **does not** automatically create indexes. 
             
 **Why is this important?** We almost always want indexes on foreign keys, but why? 
 
@@ -425,9 +425,8 @@ count the number of people with the same last name. If you look at the inserts, 
 
 <details><summary>Hint</summary><p>
 
-```
-use GROUP BY to group the results
-```
+use `group by` to group the results
+
 </p></details>
 
 <details><summary>Answer</summary><p>
@@ -437,8 +436,9 @@ select count(*), last_name
   from person p
   group by last_name;
   
-Note: more generally, group by is used to collapse rows. 
 ```
+Note: group by is used to collapse rows.
+
 </p></details>
 
 
@@ -457,7 +457,7 @@ select count(*), last_name
 
 ## Exercise 3 - Joins
 
-Joins are a way of linking result sets. Pretend we have the following data:
+[Joins](https://en.wikipedia.org/wiki/Join_(SQL)) are a way of linking result sets. Pretend we have the following data:
 
 **table:** person
 
@@ -557,17 +557,17 @@ Develop a query to display each of the foods, and how many people **HATES** that
 ```
 select f.name, count(*) count, 'HATES' preference from food f
   join person_food pf on pf.food_id = f.food_id and person_food_type = 'HATES'
-  group by f.name;
-  
-Note there are only 5 hated foods and you aren't getting back a row for Apples with a count of 0. Why is this?  
-  
+  group by f.name;  
 ```
+
+Note there are only 5 hated foods rather that 6. You aren't getting back a row for Apples with a count of 0. Why is this?
+
 </p></details>
 
 
 ### Exercise 3c
 
-Modify your query so Apples is displayed with a count of 0. (you'll want to change your join type)
+Modify your query so Apples is displayed with a count of 0. (change your join type)
 
 
 **expected output**
@@ -630,19 +630,34 @@ order by preference, count, name;
 
 ### Exercise 4 - Common table expressions
 
-When developing sql queries and reports, sometimes you want to make intermediate result sets to simplify your query. A common table expressions is a temporary named result set, derived from a simple query (`with` clause).
+[Common table expressions](https://en.wikipedia.org/wiki/Hierarchical_and_recursive_queries_in_SQL#Common_table_expression) are included in the ANSI SQL1999 standard. When developing sql queries and reports, you often want to make intermediate result sets to simplify your query. A common table expressions is a temporary named result set, derived from a simple query, using a `with` clause.
 
-Note: Common table expressions are included in the ANSI SQL1999 standard
-
-Example:
+Here is an example with some static data (created by union-ing values)
 
 ```
 with fancy_temp_results as (
     select 'hello' column_alias UNION
+    select 'world'              UNION
+    select 'goodnight'          UNION
+    select 'moon')
+select * from fancy_temp_results t;
+```
+
+In a query, you can have *multiple* CTEs:
+
+```
+with
+ data_to_fix_ids as (
+    select 1 column_alias  UNION
+    select 17              UNION
+    select 29              UNION
+    select 32),
+ fancy_temp_results as (
+    select 'hello' column_alias UNION
     select 'world' UNION
     select 'goodnight' UNION
     select 'moon')
-select * from fancy_temp_results t;
+select * from fancy_temp_results, data_to_fix_ids;
 ```
 
 Include the results of Exercise 3d in a CTE (name your result set **preferences**). Use your CTE to develop a query that has the following output:
@@ -705,7 +720,7 @@ select loves.name, loves.count "# loves", hates.count "# hates"
 
 ## Exercise 5 - Window functions
 
-Window functions (or analytic functions as Oracle calls them) are part of the ANSI SQL2003 standard. Window functions **do not collapse rows** like a group by. Window functions are useful when you want to include totals at a row level in a report.
+[Window functions](https://en.wikipedia.org/wiki/Window_function_(SQL) (or analytic functions as Oracle calls them) are part of the ANSI SQL2003 standard. Window functions allow us to perform aggregate operations on a subset of the date (averages, counts, sums etc). Window functions **do not collapse rows** like a group by. They are most useful when you want to include totals at a row level in a report.
 
 Here is a simple example:
 
